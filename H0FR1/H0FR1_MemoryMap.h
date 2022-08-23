@@ -2,14 +2,14 @@
  BitzOS (BOS) V0.2.7 - Copyright (C) 2017-2022 Hexabitz
  All rights reserved
 
- File Name     : H0FR6_MemoryMap.h
+ File Name     : H0FR1_MemoryMap.h
  Description   : Module MCU memory map header file.
 
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef H0FR6_MEMORYMAP_H
-#define H0FR6_MEMORYMAP_H
+#ifndef H0FR1_MEMORYMAP_H
+#define H0FR1_MEMORYMAP_H
 
 #ifdef __cplusplus
  extern "C" {

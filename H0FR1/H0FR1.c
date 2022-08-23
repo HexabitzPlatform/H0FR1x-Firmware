@@ -2,17 +2,14 @@
  BitzOS (BOS) V0.2.7 - Copyright (C) 2017-2022 Hexabitz
  All rights reserved
 
- File Name     : H0FR6.c
+ File Name     : H0FR1.c
  Description   : Source code for module H0FR1 SPDT mechanical DC relay
- , module H0FR6 Solid state AC relay (AQH3213A)
- , module H0FR7 Mosfet.
+
 
 
  Required MCU resources :
 
  >> USARTs 1,2,3,5,6 for module ports.
- >> Timer 3 (Ch3) for Switch PWM (H0FR6 || H0FR7).
- >> ADC 1 (Ch0) for Mosfet Current calculation (H0FR7 only)
  >> GPIOB 0 for Switch.
 
  */

@@ -2,25 +2,24 @@
     BitzOS (BOS) V0.2.7 - Copyright (C) 2017-2022 Hexabitz
     All rights reserved
 		
-    File Name     : H0FR6.h
+    File Name     : H0FR1.h
     Description   : Header file for module H0FR1 SPDT mechanical DC relay
-						   , module H0FR6 Solid state AC relay (AQH3213A)
-						   , module H0FR7 Mosfet.
+
 */
 	
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef H0FR6_H
-#define H0FR6_H
+#ifndef H0FR1_H
+#define H0FR1_H
 
 /* Includes ------------------------------------------------------------------*/
 #include "BOS.h"
-#include "H0FR6_MemoryMap.h"	
-#include "H0FR6_uart.h"	
-#include "H0FR6_gpio.h"	
-#include "H0FR6_dma.h"
-#include "H0FR6_adc.h"
-#include "H0FR6_eeprom.h"
-#include "H0FR6_inputs.h"
+#include "H0FR1_MemoryMap.h"
+#include "H0FR1_uart.h"
+#include "H0FR1_gpio.h"
+#include "H0FR1_dma.h"
+#include "H0FR1_adc.h"
+#include "H0FR1_eeprom.h"
+#include "H0FR1_inputs.h"
 
 /* Exported definitions -------------------------------------------------------*/
 #ifdef H0FR1
