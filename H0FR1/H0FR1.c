@@ -26,7 +26,7 @@ UART_HandleTypeDef huart6;
 
 /* Module exported parameters ------------------------------------------------*/
 
-module_param_t modParam[NUM_MODULE_PARAMS] ={{.paramPtr =&H0FR6_Current, .paramFormat =FMT_FLOAT, .paramName ="current"}};
+module_param_t modParam[NUM_MODULE_PARAMS] ={{.paramPtr =NULL, .paramFormat =FMT_FLOAT, .paramName ="current"}};
 /* Exported variables */
 extern FLASH_ProcessTypeDef pFlash;
 extern uint8_t numOfRecordedSnippets;
@@ -34,29 +34,16 @@ extern uint8_t numOfRecordedSnippets;
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim3;
 TimerHandle_t xTimerSwitch = NULL;
-TaskHandle_t MosfetHandle = NULL;
 Switch_state_t Switch_state = STATE_OFF, Switch_Oldstate = STATE_ON;
 uint8_t SwitchindMode = 0;
-uint8_t stream_index = 0;
-uint8_t mosfetPort, mosfetModule, mosfetState, mosfetMode;
-uint32_t rawValues, mosfetPeriod, mosfetTimeout, t0, temp32;
-float tempFloat, Switch_OldDC;
-float mosfetBuffer = 0;
+uint32_t  t0, temp32;
+
 float Current = 0.0f;
-float *ptrBuffer = &mosfetBuffer;
-bool stopB = 0;
-float mosfetCurrent __attribute__((section(".mySection")));
 
 /* Private function prototypes -----------------------------------------------*/
 void SwitchTimerCallback(TimerHandle_t xTimerSwitch);
-Module_Status Set_Switch_PWM(uint32_t freq,float dutycycle);
 void TIM3_Init(void);
 void TIM3_DeInit(void);
-static float Current_Calculation(void);
-static void MosfetTask(void *argument);
-static Module_Status SendMeasurementResult(uint8_t request,float value,uint8_t module,uint8_t port,float *buffer);
-static void CheckForEnterKey(void);
-static Module_Status GetStopCompletedStatus(uint32_t *pStopStatus);
 void SetupPortForRemoteBootloaderUpdate(uint8_t port);
 void remoteBootloaderUpdate(uint8_t src,uint8_t dst,uint8_t inport,uint8_t outport);
 /* Create CLI commands --------------------------------------------------------*/
@@ -341,17 +328,14 @@ void Module_Peripheral_Init(void) {
 	Switch_Init();
 }
 
-void initialValue(void)
-{
-	mosfetCurrent=0;
-}
+
 
 /*-----------------------------------------------------------*/
 
 /* --- H0FR1 message processing task. */
 Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src,
 		uint8_t dst, uint8_t shift) {
-	Module_Status result = H0FRx_OK;
+	Module_Status result = H0FR1_OK;
 	uint32_t period;
 	uint32_t timeout;
 
@@ -372,7 +356,7 @@ Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src,
 
 
 	default:
-		result = H0FRx_ERR_UnknownMessage;
+		result = H0FR1_ERR_UnknownMessage;
 		break;
 	}
 

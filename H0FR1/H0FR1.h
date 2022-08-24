@@ -134,7 +134,6 @@ extern void MX_USART5_UART_Init(void);
 extern void MX_USART6_UART_Init(void);
 
 extern Switch_state_t Switch_State;
-extern uint8_t SwitchindMode;
 	
 /* -----------------------------------------------------------------------
 	|		        		    	APIs	 							|									 	|
