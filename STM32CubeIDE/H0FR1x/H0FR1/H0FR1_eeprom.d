@@ -1,5 +1,4 @@
-H0FR1/H0FR1_eeprom.o: \
- C:/Users/ASUS/Documents/H0FR1x-Firmware/H0FR1/H0FR1_eeprom.c \
+H0FR1/H0FR1_eeprom.o: D:/Hexabitz\ release/H0FR1x/H0FR1/H0FR1_eeprom.c \
  ../../BOS/BOS.h ../../BOS/BOS_MsgCodes.h \
  ../../Thirdparty/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h \
  ../../H0FR1/stm32f0xx_hal_conf.h \
@@ -59,8 +58,7 @@ H0FR1/H0FR1_eeprom.o: \
  ../../H0FR1/H0FR1_dma.h ../../H0FR1/H0FR1_adc.h \
  ../../H0FR1/H0FR1_eeprom.h ../../H0FR1/H0FR1_inputs.h \
  ../../Thirdparty/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_adc_ex.h \
- ../../BOS/BOS_DMA.h \
- C:/Users/ASUS/Documents/H0FR1x-Firmware/H0FR1/H0FR1_eeprom.h
+ ../../BOS/BOS_DMA.h D:/Hexabitz\ release/H0FR1x/H0FR1/H0FR1_eeprom.h
 
 ../../BOS/BOS.h:
 
@@ -196,4 +194,4 @@ H0FR1/H0FR1_eeprom.o: \
 
 ../../BOS/BOS_DMA.h:
 
-C:/Users/ASUS/Documents/H0FR1x-Firmware/H0FR1/H0FR1_eeprom.h:
+D:/Hexabitz\ release/H0FR1x/H0FR1/H0FR1_eeprom.h:
