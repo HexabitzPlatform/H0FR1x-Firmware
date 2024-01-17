@@ -1,2 +1,2 @@
 H0FR1/startup_stm32f091xc.o: \
- D:/Hexabitz\ release/H0FR1x/H0FR1/startup_stm32f091xc.s
+ F:/HDD/Hexabiz_G0/H0FR1/H0FR1/startup_stm32f091xc.s
