@@ -1,12 +1,18 @@
 /*
-    BitzOS (BOS) V0.3.1 - Copyright (C) 2017-2024 Hexabitz
-    All rights reserved
-		
-    File Name     : H0FR1.h
-    Description   : Header file for module H0FR1 SPDT mechanical DC relay
+ BitzOS (BOS) V0.3.6 - Copyright (C) 2017-2024 Hexabitz
+ All rights reserved
+ 
+ File Name     : H0FR1.h
+ Description   : Header file for module H0FR1.
+ (Description_of_module)
 
-*/
-	
+ (Description of Special module peripheral configuration):
+ >>
+ >>
+ >>
+
+ */
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef H0FR1_H
 #define H0FR1_H
@@ -17,40 +23,41 @@
 #include "H0FR1_uart.h"
 #include "H0FR1_gpio.h"
 #include "H0FR1_dma.h"
-#include "H0FR1_adc.h"
-#include "H0FR1_eeprom.h"
 #include "H0FR1_inputs.h"
+#include "H0FR1_eeprom.h"
 
 /* Exported definitions -------------------------------------------------------*/
 
 #define	modulePN		_H0FR1
 
-
-
 /* Port-related definitions */
 #define	NumOfPorts			5
+
 #define P_PROG 				P2						/* ST factory bootloader UART */
 
 /* Define available ports */
-#define _P1 
-#define _P2 
-#define _P3 
-#define _P4 
-#define _P5 
+#define _P1
+#define _P2
+#define _P3
+#define _P4
+#define _P5
+#define _P6
 
 /* Define available USARTs */
 #define _Usart1 1
 #define _Usart2 1
 #define _Usart3 1
+#define _Usart4	1
 #define _Usart5 1
-#define _Usart6 1
+#define _Usart6	1
 
 /* Port-UART mapping */
-#define P1uart &huart5
-#define P2uart &huart2	
-#define P3uart &huart6	
+#define P1uart &huart4
+#define P2uart &huart2
+#define P3uart &huart6
 #define P4uart &huart3
-#define P5uart &huart1
+#define P5uart &huart5
+#define P6uart &huart1
 
 /* Port Definitions */
 #define	USART1_TX_PIN		GPIO_PIN_9
@@ -71,58 +78,62 @@
 #define	USART3_RX_PORT		GPIOB
 #define	USART3_AF			GPIO_AF4_USART3
 
-#define	USART5_TX_PIN		GPIO_PIN_3
-#define	USART5_RX_PIN		GPIO_PIN_4
-#define	USART5_TX_PORT		GPIOB
-#define	USART5_RX_PORT		GPIOB
-#define	USART5_AF			GPIO_AF4_USART5
+#define	USART4_TX_PIN		GPIO_PIN_0
+#define	USART4_RX_PIN		GPIO_PIN_1
+#define	USART4_TX_PORT		GPIOA
+#define	USART4_RX_PORT		GPIOA
+#define	USART4_AF			GPIO_AF4_USART4
 
-#define	USART6_TX_PIN		GPIO_PIN_4
-#define	USART6_RX_PIN		GPIO_PIN_5
-#define	USART6_TX_PORT		GPIOA
-#define	USART6_RX_PORT		GPIOA
-#define	USART6_AF			GPIO_AF5_USART6
+#define	USART5_TX_PIN		GPIO_PIN_3
+#define	USART5_RX_PIN		GPIO_PIN_2
+#define	USART5_TX_PORT		GPIOD
+#define	USART5_RX_PORT		GPIOD
+#define	USART5_AF			GPIO_AF3_USART5
+
+#define USART6_TX_PIN   GPIO_PIN_8
+#define USART6_RX_PIN   GPIO_PIN_9
+#define USART6_TX_PORT  GPIOB
+#define USART6_RX_PORT  GPIOB
+#define USART6_AF       GPIO_AF8_USART6
 
 /* Module-specific Definitions */
+#define NUM_MODULE_PARAMS		3
 
-#define	_Switch_PIN						GPIO_PIN_0
-#define	_Switch_PORT						GPIOB
-#define _Switch_GPIO_CLK()				__GPIOB_CLK_ENABLE();
+/* Indicator LED */
+#define _IND_LED_PORT		 GPIOB
+#define _IND_LED_PIN		 GPIO_PIN_2
 
+/* Module GPIO Pinout */
 
+/* Module Special I2C */
 
-#define NUM_MODULE_PARAMS				  1
+/* Module special parameters */
 
-/* H0FRx_Status Type Definition */
-typedef enum 
-{
+#define SAMPLE_TO_PORT          1
+#define STREAM_TO_PORT          2
+#define STREAM_TO_Terminal      3
+#define DEFAULT                 4
+
+/* Module EEPROM Variables */
+
+// Module Addressing Space 500 - 599
+/* Exported types ------------------------------------------------------------*/
+
+/* H0FR1_Status Type Definition */
+typedef enum {
 	H0FR1_OK = 0,
 	H0FR1_ERR_UnknownMessage = 1,
-	H0FR1_ERR_Wrong_Value = 2,
-	H0FR1_ERR_Timeout,
 	H0FR1_ERR_WrongParams,
-	H0FR1_STOPED,
 	H0FR1_ERROR = 255
 } Module_Status;
 
-/* Switch_state_t Type Definition */
-typedef enum  {
-	STATE_OFF,
-	STATE_ON,
-	STATE_PWM
-} Switch_state_t;
-
-
-/* Indicator LED */
-
-#define _IND_LED_PORT		GPIOA
-#define _IND_LED_PIN		GPIO_PIN_11
-
+/* Export Module typedef structure */
 
 /* Export UART variables */
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
+extern UART_HandleTypeDef huart4;
 extern UART_HandleTypeDef huart5;
 extern UART_HandleTypeDef huart6;
 
@@ -130,33 +141,26 @@ extern UART_HandleTypeDef huart6;
 extern void MX_USART1_UART_Init(void);
 extern void MX_USART2_UART_Init(void);
 extern void MX_USART3_UART_Init(void);
+extern void MX_USART4_UART_Init(void);
 extern void MX_USART5_UART_Init(void);
 extern void MX_USART6_UART_Init(void);
+extern void SystemClock_Config(void);
+extern void ExecuteMonitor(void);
 
-extern Switch_state_t Switch_State;
-	
 /* -----------------------------------------------------------------------
-	|		        		    	APIs	 							|									 	|
-   ----------------------------------------------------------------------- 
-*/
-
-extern Module_Status Output_on(uint32_t timeout);
-extern Module_Status Output_off(void);
-extern Module_Status Output_toggle(void);
-
+ |								  APIs							          |  																 	|
+ /* -----------------------------------------------------------------------
+ */
 
 void SetupPortForRemoteBootloaderUpdate(uint8_t port);
-void remoteBootloaderUpdate(uint8_t src,uint8_t dst,uint8_t inport,uint8_t outport);
+void remoteBootloaderUpdate(uint8_t src, uint8_t dst, uint8_t inport,
+		uint8_t outport);
+
 /* -----------------------------------------------------------------------
-	|			    			 Commands								|								 	|
-   ----------------------------------------------------------------------- 
-*/
+ |								Commands							      |															 	|
+ /* -----------------------------------------------------------------------
+ */
 
-extern const CLI_Command_Definition_t onCommandDefinition;
-extern const CLI_Command_Definition_t offCommandDefinition;
-extern const CLI_Command_Definition_t toggleCommandDefinition;
-extern const CLI_Command_Definition_t ledModeCommandDefinition;
-
-#endif /* H0FR1_H  */
+#endif /* H0FR1_H */
 
 /************************ (C) COPYRIGHT HEXABITZ *****END OF FILE****/
