@@ -100,8 +100,8 @@
 #define NUM_MODULE_PARAMS		3
 
 /* Indicator LED */
-#define _IND_LED_PORT		 GPIOB
-#define _IND_LED_PIN		 GPIO_PIN_2
+#define _IND_LED_PORT		 GPIOA
+#define _IND_LED_PIN		 GPIO_PIN_6
 
 /* Module GPIO Pinout */
 
