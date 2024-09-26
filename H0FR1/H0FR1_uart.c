@@ -28,30 +28,30 @@ DMA_HandleTypeDef hdma_usart6_rx;
 /* USART1 init function */
 #ifdef _Usart1
 void MX_USART1_UART_Init(void){
-	  huart1.Instance = USART1;
-	  huart1.Init.BaudRate = DEF_ARRAY_BAUDRATE;
-	  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-	  huart1.Init.StopBits = UART_STOPBITS_1;
-	  huart1.Init.Parity = UART_PARITY_NONE;
-	  huart1.Init.Mode = UART_MODE_TX_RX;
-	  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-	  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-	  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-	  huart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
-	  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-	  HAL_UART_Init(&huart1);
+	huart1.Instance = USART1;
+	huart1.Init.BaudRate = DEF_ARRAY_BAUDRATE;
+	huart1.Init.WordLength = UART_WORDLENGTH_8B;
+	huart1.Init.StopBits = UART_STOPBITS_1;
+	huart1.Init.Parity = UART_PARITY_NONE;
+	huart1.Init.Mode = UART_MODE_TX_RX;
+	huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+	huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+	huart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+	huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+	HAL_UART_Init(&huart1);
 
-	  HAL_UARTEx_SetTxFifoThreshold(&huart1, UART_TXFIFO_THRESHOLD_1_8);
+	HAL_UARTEx_SetTxFifoThreshold(&huart1, UART_TXFIFO_THRESHOLD_1_8);
 
-	  HAL_UARTEx_SetRxFifoThreshold(&huart1, UART_RXFIFO_THRESHOLD_1_8);
+	HAL_UARTEx_SetRxFifoThreshold(&huart1, UART_RXFIFO_THRESHOLD_1_8);
 
-	  HAL_UARTEx_DisableFifoMode(&huart1);
+	HAL_UARTEx_DisableFifoMode(&huart1);
 
 #if _P5pol_reversed
 	huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_SWAP_INIT;
 	huart1.AdvancedInit.Swap = UART_ADVFEATURE_SWAP_ENABLE;
 	HAL_UART_Init(&huart1);
-	#endif
+#endif
 }
 #endif
 
@@ -81,7 +81,7 @@ void MX_USART2_UART_Init(void) {
 	huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_SWAP_INIT;
 	huart2.AdvancedInit.Swap = UART_ADVFEATURE_SWAP_ENABLE;
 	HAL_UART_Init(&huart2);
-	#endif	
+#endif
 }
 #endif
 
@@ -111,7 +111,7 @@ void MX_USART3_UART_Init(void) {
 	huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_SWAP_INIT;
 	huart3.AdvancedInit.Swap = UART_ADVFEATURE_SWAP_ENABLE;
 	HAL_UART_Init(&huart3);
-	#endif	
+#endif
 }
 #endif
 
@@ -134,7 +134,7 @@ void MX_USART4_UART_Init(void) {
 	huart4.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_SWAP_INIT;
 	huart4.AdvancedInit.Swap = UART_ADVFEATURE_SWAP_ENABLE;
 	HAL_UART_Init(&huart4);
-	#endif	
+#endif
 }
 #endif
 
@@ -154,11 +154,11 @@ void MX_USART5_UART_Init(void) {
 	huart5.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
 	HAL_UART_Init(&huart5);
 
-#if _P5pol_reversed
+#if _P3pol_reversed
 	huart5.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_SWAP_INIT;
 	huart5.AdvancedInit.Swap = UART_ADVFEATURE_SWAP_ENABLE;
 	HAL_UART_Init(&huart5);
-	#endif	
+#endif
 }
 #endif
 
@@ -178,11 +178,11 @@ void MX_USART6_UART_Init(void) {
 	huart6.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
 	HAL_UART_Init(&huart6);
 
-#if _P3pol_reversed
+#if _P1pol_reversed
 	huart6.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_SWAP_INIT;
 	huart6.AdvancedInit.Swap = UART_ADVFEATURE_SWAP_ENABLE;
 	HAL_UART_Init(&huart6);
-	#endif	
+#endif
 }
 #endif
 
@@ -190,7 +190,55 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
 
 	GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 	RCC_PeriphCLKInitTypeDef PeriphClkInit = { 0 };
-	if (huart->Instance == USART2) {
+
+	if(huart->Instance==USART1){
+#ifdef _Usart1
+		/*Initializes the peripherals clocks
+		 */
+		PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+		PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK1;
+		HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
+
+		/* Peripheral clock enable */
+		__HAL_RCC_USART1_CLK_ENABLE();
+		__HAL_RCC_GPIOB_CLK_ENABLE();
+
+		/*USART1 GPIO Configuration*/
+		GPIO_InitStruct.Pin = USART1_TX_PIN;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+		GPIO_InitStruct.Alternate = USART1_AF;
+		HAL_GPIO_Init(USART1_TX_PORT, &GPIO_InitStruct);
+
+		GPIO_InitStruct.Pin = USART1_RX_PIN;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+		GPIO_InitStruct.Alternate = USART1_AF;
+		HAL_GPIO_Init(USART1_RX_PORT, &GPIO_InitStruct);
+
+		/* USART1 DMA Init */
+		/* USART1_RX Init */
+		hdma_usart1_rx.Instance = DMA1_Channel1;
+		hdma_usart1_rx.Init.Request = DMA_REQUEST_USART1_RX;
+		hdma_usart1_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+		hdma_usart1_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+		hdma_usart1_rx.Init.MemInc = DMA_MINC_ENABLE;
+		hdma_usart1_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+		hdma_usart1_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+		hdma_usart1_rx.Init.Mode = DMA_CIRCULAR;
+		hdma_usart1_rx.Init.Priority = DMA_PRIORITY_LOW;
+		HAL_DMA_Init(&hdma_usart1_rx);
+
+		__HAL_LINKDMA(huart,hdmarx,hdma_usart1_rx);
+
+		/* USART1 interrupt Init */
+		HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
+		HAL_NVIC_EnableIRQ(USART1_IRQn);
+#endif
+	}
+	else if (huart->Instance == USART2) {
 #ifdef _Usart2
 
 		PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
@@ -243,8 +291,8 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
 
 		/* USART3 clock enable */
 		__HAL_RCC_USART3_CLK_ENABLE();
-
 		__HAL_RCC_GPIOB_CLK_ENABLE();
+
 		/* USART3 GPIO Configuration */
 		GPIO_InitStruct.Pin = USART3_TX_PIN;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -284,7 +332,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
 
 		/* Peripheral clock enable */
 		__USART4_CLK_ENABLE()
-		;
+				;
 
 		/* USART4 GPIO Configuration */
 		GPIO_InitStruct.Pin = USART4_TX_PIN;
@@ -325,7 +373,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
 
 		/* USART5 clock enable */
 		__HAL_RCC_USART5_CLK_ENABLE();
-		__HAL_RCC_GPIOD_CLK_ENABLE();
+		__HAL_RCC_GPIOB_CLK_ENABLE();
 
 		/* USART5 GPIO Configuration */
 		GPIO_InitStruct.Pin = USART5_TX_PIN;
@@ -366,7 +414,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
 
 		/* USART6 clock enable */
 		__HAL_RCC_USART6_CLK_ENABLE();
-		__HAL_RCC_GPIOA_CLK_ENABLE();
+		__HAL_RCC_GPIOB_CLK_ENABLE();
 
 		/* USART6 GPIO Configuration */
 		GPIO_InitStruct.Pin = USART6_TX_PIN;
@@ -542,21 +590,21 @@ UART_HandleTypeDef* GetUart(uint8_t port) {
 		return P6uart;
 #endif
 #ifdef _P7
-		case P7 :
-			return P7uart;
-	#endif
+	case P7 :
+		return P7uart;
+#endif
 #ifdef _P8
-		case P8 :
-			return P8uart;
-	#endif
+	case P8 :
+		return P8uart;
+#endif
 #ifdef _P9
-		case P9 :
-			return P9uart;
-	#endif
+	case P9 :
+		return P9uart;
+#endif
 #ifdef _P10
-		case P10 :
-			return P10uart;
-	#endif
+	case P10 :
+		return P10uart;
+#endif
 	default:
 		return 0;
 	}
@@ -622,7 +670,7 @@ BOS_Status ReadPortsDirMSG(uint8_t SourceModule) {
 /*-----------------------------------------------------------*/
 #ifndef __N
 /* --- Update module port directions based on what is stored in eeprom ---
-*/
+ */
 BOS_Status UpdateMyPortsDir(void)
 {
 	BOS_Status result = BOS_OK;
