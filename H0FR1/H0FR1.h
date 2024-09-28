@@ -97,6 +97,10 @@
 #define USART6_AF       GPIO_AF8_USART6
 
 /* Module-specific Definitions */
+#define	SWITCH_PIN						GPIO_PIN_5
+#define	SWITCH_PORT						GPIOB
+#define Switch_GPIO_CLK()				__GPIOB_CLK_ENABLE();
+
 #define NUM_MODULE_PARAMS		3
 
 /* Indicator LED */

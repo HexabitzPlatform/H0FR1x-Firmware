@@ -41,21 +41,6 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
 }
-
-void HX711_GPIO_Init(void)
-{
-	GPIO_InitTypeDef GPIO_InitStruct;
-
-	GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_3;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed =  GPIO_SPEED_FREQ_HIGH;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-	GPIO_InitStruct.Pin = GPIO_PIN_4;
-	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-}
 //-- Configure indicator LED
 void IND_LED_Init(void){
 	GPIO_InitTypeDef GPIO_InitStruct;
@@ -65,6 +50,20 @@ void IND_LED_Init(void){
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(_IND_LED_PORT,&GPIO_InitStruct);
+}
+/* ------Configure Switch GPIO ------
+*/
+void SwitchInit(void){
+
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	HAL_GPIO_WritePin(SWITCH_PORT,SWITCH_PIN, GPIO_PIN_RESET);
+	  /*Configure GPIO pin*/
+	  GPIO_InitStruct.Pin = SWITCH_PIN;
+	  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	  GPIO_InitStruct.Pull = GPIO_NOPULL;
+	  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	  HAL_GPIO_Init(SWITCH_PORT, &GPIO_InitStruct);
 }
 
 /*-----------------------------------------------------------*/
