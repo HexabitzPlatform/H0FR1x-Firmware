@@ -22,6 +22,7 @@
 extern void GPIO_Init(void);
 extern void IND_LED_Init(void);
 extern void MX_GPIO_Init(void);
+extern void SwitchInit(void);
 
 #ifdef __cplusplus
 }
