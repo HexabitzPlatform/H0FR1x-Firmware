@@ -469,8 +469,9 @@ uint8_t GetPort(UART_HandleTypeDef *huart){
 
 /*-----------------------------------------------------------*/
 /* --- Switch timer callback ---*/
-void SwitchTimerCallback(TimerHandle_t xTimerSwitch) {
-
+void SwitchTimerCallback(TimerHandle_t xTimerSwitch){
+	/* The solid state switched off after elapsed time */
+	OutputOff();
 }
 /* -----------------------------------------------------------------------
  |								  User Function                           |
@@ -502,11 +503,21 @@ Module_Status OutputOn(uint32_t timeout) {
 
 	return H0FR1_OK;
 }
-
-
-
-
 /*-----------------------------------------------------------*/
+/****************************************************************************
+* @brief  Turns off the solid state switch.
+* @retval Module_Status.
+****************************************************************************/
+Module_Status OutputOff(void) {
+
+	/* Turn off */
+	HAL_GPIO_WritePin(SWITCH_PORT, SWITCH_PIN, GPIO_PIN_RESET);
+
+	/* Update Switch state */
+	SwitchState = STATE_OFF;
+
+	return H0FR1_OK;
+}
 /*-----------------------------------------------------------*/
 
 /*-----------------------------------------------------------*/
