@@ -40,11 +40,11 @@ static Module_Status PollingSleepCLISafe(uint32_t period, long Numofsamples);
 module_param_t modParam[NUM_MODULE_PARAMS] ={{.paramPtr = NULL, .paramFormat =FMT_FLOAT, .paramName =""}};
 
 /* Private variables ---------------------------------------------------------*/
-TaskHandle_t TOFTaskHandle = NULL;
+TimerHandle_t xTimerSwitch = NULL;
 
 /* Private function prototypes -----------------------------------------------*/
 
-void TOFTask(void *argument);
+void SwitchTimerCallback(TimerHandle_t xTimerSwitch);
 void ExecuteMonitor(void);
 void FLASH_Page_Eras(uint32_t Addr );
 
@@ -352,10 +352,13 @@ void Module_Peripheral_Init(void){
 	MX_USART1_UART_Init();
 	MX_USART2_UART_Init();
 	MX_USART3_UART_Init();
-//	MX_USART4_UART_Init();
+	//	MX_USART4_UART_Init();
 	MX_USART5_UART_Init();
 	MX_USART6_UART_Init();
-
+	/* Switch GPIO */
+	SwitchInit();
+	/* Create a timeout software timer for Switch_on() API */
+	xTimerSwitch =xTimerCreate("SwitchTimer",pdMS_TO_TICKS(1000),pdFALSE,(void* )1,SwitchTimerCallback);
 	//Circulating DMA Channels ON All Module
 	for (int i = 1; i <= NumOfPorts; i++) {
 		if (GetUart(i) == &huart1) {
@@ -371,7 +374,6 @@ void Module_Peripheral_Init(void){
 		else if (GetUart(i) == &huart6) {
 			index_dma[i - 1] = &(DMA1_Channel6->CNDTR);}
 	}
-
 }
 
 /*-----------------------------------------------------------*/
@@ -465,7 +467,10 @@ uint8_t GetPort(UART_HandleTypeDef *huart){
 /*-----------------------------------------------------------*/
 
 /*-----------------------------------------------------------*/
+/* --- Switch timer callback ---*/
+void SwitchTimerCallback(TimerHandle_t xTimerSwitch) {
 
+}
 /* -----------------------------------------------------------------------
  |								  User Function                           |
 /* -----------------------------------------------------------------------
