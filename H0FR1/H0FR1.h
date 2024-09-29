@@ -161,6 +161,7 @@ extern void ExecuteMonitor(void);
  */
 extern Module_Status OutputOn(uint32_t timeout);
 extern Module_Status OutputOff(void);
+extern Module_Status OutputToggle(void);
 void SetupPortForRemoteBootloaderUpdate(uint8_t port);
 void remoteBootloaderUpdate(uint8_t src, uint8_t dst, uint8_t inport,
 		uint8_t outport);

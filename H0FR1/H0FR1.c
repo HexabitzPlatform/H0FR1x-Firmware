@@ -519,7 +519,27 @@ Module_Status OutputOff(void) {
 	return H0FR1_OK;
 }
 /*-----------------------------------------------------------*/
+/****************************************************************************
+* @brief  Toggle the solid state Switch.
+* @retval Module_Status.
+****************************************************************************/
+Module_Status OutputToggle(void) {
+	Module_Status result;
 
+	if (SwitchState) {
+		/*if the state machine was ON turned it OFF*/
+		result = OutputOff();
+		if (result != H0FR1_OK)
+			return H0FR1_ERROR;
+	} else {
+		if (SwitchOldState == STATE_ON){
+			result = OutputOn(portMAX_DELAY);
+			if ( result != H0FR1_OK)
+				return H0FR1_ERROR;
+		}
+	}
+	return H0FR1_OK;
+}
 /*-----------------------------------------------------------*/
 
 
