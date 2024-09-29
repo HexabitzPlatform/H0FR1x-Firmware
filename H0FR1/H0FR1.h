@@ -130,9 +130,13 @@ typedef enum {
 	H0FR1_ERR_WrongParams,
 	H0FR1_ERROR = 255
 } Module_Status;
+/* Switch_state_t Type Definition */
+typedef enum  {
+	STATE_OFF = 0, STATE_ON = 1,
+} SwitchState_t;
 
 /* Export Module typedef structure */
-
+extern SwitchState_t SwitchState;
 /* Export UART variables */
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
@@ -155,7 +159,7 @@ extern void ExecuteMonitor(void);
  |								  APIs							          |  																 	|
  /* -----------------------------------------------------------------------
  */
-
+extern Module_Status OutputOn(uint32_t timeout);
 void SetupPortForRemoteBootloaderUpdate(uint8_t port);
 void remoteBootloaderUpdate(uint8_t src, uint8_t dst, uint8_t inport,
 		uint8_t outport);

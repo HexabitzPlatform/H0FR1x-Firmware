@@ -41,6 +41,7 @@ module_param_t modParam[NUM_MODULE_PARAMS] ={{.paramPtr = NULL, .paramFormat =FM
 
 /* Private variables ---------------------------------------------------------*/
 TimerHandle_t xTimerSwitch = NULL;
+SwitchState_t SwitchState = STATE_OFF, SwitchOldState = STATE_ON; // Initial state value to solid switch
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -474,7 +475,34 @@ void SwitchTimerCallback(TimerHandle_t xTimerSwitch) {
 /* -----------------------------------------------------------------------
  |								  User Function                           |
 /* -----------------------------------------------------------------------
- */
+
+/****************************************************************************
+* @brief  Turns on the solid state switch and sets a timeout to turn it off.
+* @param  timeout: Duration in milliseconds for which the switch should remain on.
+* @retval Module_Status.
+****************************************************************************/
+Module_Status OutputOn(uint32_t timeout) {
+
+	if (timeout < 0U || timeout > portMAX_DELAY)
+		return H0FR1_ERR_WrongParams;
+	/* Turn on */
+	HAL_GPIO_WritePin(SWITCH_PORT, SWITCH_PIN, GPIO_PIN_SET);
+
+	/* Timeout */
+	if (timeout != portMAX_DELAY) {
+		/* Stop (Reset) the timer if it's already running */
+		if (xTimerIsTimerActive(xTimerSwitch))
+			xTimerStop(xTimerSwitch, 100);
+		/* Update timer timeout - This also restarts the timer */
+		xTimerChangePeriod(xTimerSwitch, pdMS_TO_TICKS(timeout), 100);
+	}
+	/* Update Switch state */
+	SwitchState = STATE_ON;
+	SwitchOldState = SwitchState;
+
+	return H0FR1_OK;
+}
+
 
 
 
