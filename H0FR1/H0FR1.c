@@ -44,21 +44,41 @@ TimerHandle_t xTimerSwitch = NULL;
 SwitchState_t SwitchState = STATE_OFF, SwitchOldState = STATE_ON; // Initial state value to solid switch
 
 /* Private function prototypes -----------------------------------------------*/
-
 void SwitchTimerCallback(TimerHandle_t xTimerSwitch);
 void ExecuteMonitor(void);
 void FLASH_Page_Eras(uint32_t Addr );
 
-/* Private function prototypes -----------------------------------------------*/
-
 /* Create CLI commands --------------------------------------------------------*/
+portBASE_TYPE OnCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString);
+portBASE_TYPE OffCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString);
+portBASE_TYPE ToggleCommand(int8_t *pcWriteBuffer,size_t xWriteBufferLen,const int8_t *pcCommandString);
 
-
-/* CLI command structure : demo */
+/* CLI command structure : on */
+const CLI_Command_Definition_t OnCommandDefinition = {
+		(const int8_t*) "on", /* The command string to type. */
+		(const int8_t*) "on:\r\n Turn solid state Switch ON with a timeout (ms) (1st par.). Use 'inf' to turn on constantly\r\n\r\n",
+		OnCommand, /* The function to run. */
+		1 /* One parameter is expected. */
+};
+/*-----------------------------------------------------------*/
+/* CLI command structure : off */
+const CLI_Command_Definition_t OffCommandDefinition = {
+		(const int8_t*) "off", /* The command string to type. */
+		(const int8_t*) "off:\r\n Turn solid state Switch OFF\r\n\r\n",
+		OffCommand, /* The function to run. */
+		0 /* No parameters are expected. */
+};
+/*-----------------------------------------------------------*/
+/* CLI command structure : toggle */
+const CLI_Command_Definition_t ToggleCommandDefinition = {
+		(const int8_t*) "toggle", /* The command string to type. */
+		(const int8_t*) "toggle:\r\n Toggle solid state Switch\r\n\r\n",
+		ToggleCommand, /* The function to run. */
+		0 /* No parameters are expected. */
+};
 
 /*-----------------------------------------------------------*/
 
-/*-----------------------------------------------------------*/
 /* CLI command structure : sample */
 
 /* CLI command structure : stop */
@@ -411,11 +431,11 @@ Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uin
 
 /* --- Register this module CLI Commands
 */
-void RegisterModuleCLICommands(void)
-{
-
+void RegisterModuleCLICommands(void) {
+	FreeRTOS_CLIRegisterCommand(&OnCommandDefinition);
+	FreeRTOS_CLIRegisterCommand(&OffCommandDefinition);
+	FreeRTOS_CLIRegisterCommand(&ToggleCommandDefinition);
 }
-
 
 /* --- Get the port for a given UART. 
  */
@@ -562,8 +582,96 @@ Module_Status OutputToggle(void) {
 /* -----------------------------------------------------------------------
  |								Commands							      |
    -----------------------------------------------------------------------
- */
+*/
+portBASE_TYPE OnCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString) {
 
+	Module_Status result = H0FR1_OK;
+	int8_t *pcParameterString1;
+	portBASE_TYPE xParameterStringLength1 = 0;
+	uint32_t timeout = 0;
+	static const int8_t *pcOKMessage = (int8_t*) "Solid state Switch is turned ON with timeout %d ms\r\n";
+	static const int8_t *pcOKMessageInf = (int8_t*) "Solid state Switch is turned ON without timeout\r\n";
+
+	/* Remove compile time warnings about unused parameters, and check the
+	 write buffer is not NULL.  NOTE - for simplicity, this example assumes the
+	 write buffer length is adequate, so does not check for buffer overflows. */
+	(void) xWriteBufferLen;
+	configASSERT(pcWriteBuffer);
+
+	/* Obtain the 1st parameter string. */
+	pcParameterString1 = (int8_t*) FreeRTOS_CLIGetParameter(pcCommandString, /* The command string itself. */
+			1, /* Return the first parameter. */
+			&xParameterStringLength1 /* Store the parameter string length. */
+	);
+
+	if (!strcmp((char*) pcParameterString1, "inf") || !strcmp((char*) pcParameterString1, "INF"))
+		timeout = portMAX_DELAY;
+	else
+		timeout = (uint32_t) atol((char*) pcParameterString1);
+
+	result = OutputOn(timeout);
+
+	/* Respond to the command */
+	if (result == H0FR1_OK) {
+		if (timeout != portMAX_DELAY) {
+			sprintf((char*) pcWriteBuffer, (char*) pcOKMessage, timeout);
+		} else {
+			strcpy((char*) pcWriteBuffer, (char*) pcOKMessageInf);
+		}
+	}
+	/* There is no more data to return after this single string, so return
+	 pdFALSE. */
+	return pdFALSE;
+}
 /*-----------------------------------------------------------*/
+portBASE_TYPE OffCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString) {
+
+	Module_Status result = H0FR1_OK;
+	static const int8_t *pcMessage = (int8_t*) "Solid state Switch is turned OFF\r\n";
+
+	/* Remove compile time warnings about unused parameters, and check the
+	 write buffer is not NULL.  NOTE - for simplicity, this example assumes the
+	 write buffer length is adequate, so does not check for buffer overflows. */
+	(void) pcCommandString;
+	(void) xWriteBufferLen;
+	configASSERT(pcWriteBuffer);
+
+	result = OutputOff();
+
+	/* Respond to the command */
+	if (result == H0FR1_OK) {
+		strcpy((char*) pcWriteBuffer, (char*) pcMessage);
+	}
+	/* There is no more data to return after this single string, so return
+	 pdFALSE. */
+	return pdFALSE;
+}
+/*-----------------------------------------------------------*/
+portBASE_TYPE ToggleCommand(int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString) {
+
+	Module_Status result = H0FR1_OK;
+	static const int8_t *pcOK1Message = (int8_t*) "Solid state Switch is turned ON\r\n";
+	static const int8_t *pcOK0Message = (int8_t*) "Solid state Switch is turned OFF\r\n";
+
+	/* Remove compile time warnings about unused parameters, and check the
+	 write buffer is not NULL.  NOTE - for simplicity, this example assumes the
+	 write buffer length is adequate, so does not check for buffer overflows. */
+	(void) xWriteBufferLen;
+	configASSERT(pcWriteBuffer);
+
+	result = OutputToggle();
+
+	/* Respond to the command */
+	if (result == H0FR1_OK) {
+		if (SwitchState) {
+			strcpy((char*) pcWriteBuffer, (char*) pcOK1Message);
+		} else {
+			strcpy((char*) pcWriteBuffer, (char*) pcOK0Message);
+		}
+	}
+	/* There is no more data to return after this single string, so return
+	 pdFALSE. */
+	return pdFALSE;
+}
 
 /************************ (C) COPYRIGHT HEXABITZ *****END OF FILE****/
