@@ -381,17 +381,29 @@ void Module_Peripheral_Init(void){
 /* --- H0FR1 message processing task.
  */
 
-Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uint8_t dst, uint8_t shift)
-{
+Module_Status Module_MessagingTask(uint16_t code, uint8_t port, uint8_t src, uint8_t dst, uint8_t shift) {
+
 	Module_Status result = H0FR1_OK;
-  uint32_t period = 0;
-  uint32_t timeout = 0;
+	uint32_t temp32 = 0;
 
-	switch (code)
-	{
+	switch (code) {
+	case CODE_H0FR1_ON:
+		temp32 = ((uint32_t) cMessage[port - 1][shift] << 0) + ((uint32_t) cMessage[port - 1][1 + shift] << 8)+ ((uint32_t) cMessage[port - 1][2 + shift] << 16)+ ((uint32_t)cMessage[port - 1][3 + shift] << 24);
+		OutputOn(temp32);
+		break;
 
+	case CODE_H0FR1_OFF:
+		OutputOff();
+		break;
+
+	case CODE_H0FR1_TOGGLE:
+		OutputToggle();
+		break;
+
+	default:
+		result = H0FR1_ERR_UnknownMessage;
+		break;
 	}
-
 	return result;
 }
 
