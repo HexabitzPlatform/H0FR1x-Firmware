@@ -41,13 +41,11 @@
 #define _P3
 #define _P4
 #define _P5
-//#define _P6
 
 /* Define available USARTs */
 #define _Usart1 1
 #define _Usart2 1
 #define _Usart3 1
-//#define _Usart4	1
 #define _Usart5 1
 #define _Usart6	1
 
@@ -57,7 +55,6 @@
 #define P3uart &huart5
 #define P4uart &huart3
 #define P5uart &huart1
-//#define P6uart &huart1
 
 /* Port Definitions */
 #define	USART1_TX_PIN		GPIO_PIN_6
@@ -107,18 +104,11 @@
 #define _IND_LED_PORT		 GPIOA
 #define _IND_LED_PIN		 GPIO_PIN_6
 
-/* Module GPIO Pinout */
-
-/* Module Special I2C */
-
 /* Module special parameters */
-
 #define SAMPLE_TO_PORT          1
 #define STREAM_TO_PORT          2
 #define STREAM_TO_Terminal      3
 #define DEFAULT                 4
-
-/* Module EEPROM Variables */
 
 // Module Addressing Space 500 - 599
 /* Exported types ------------------------------------------------------------*/
@@ -130,6 +120,7 @@ typedef enum {
 	H0FR1_ERR_WrongParams,
 	H0FR1_ERROR = 255
 } Module_Status;
+
 /* Switch_state_t Type Definition */
 typedef enum  {
 	STATE_OFF = 0, STATE_ON = 1,
@@ -137,6 +128,7 @@ typedef enum  {
 
 /* Export Module typedef structure */
 extern SwitchState_t SwitchState;
+
 /* Export UART variables */
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;

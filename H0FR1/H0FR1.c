@@ -29,16 +29,13 @@ UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart5;
 UART_HandleTypeDef huart6;
 
-/* Exported variables */
-extern FLASH_ProcessTypeDef pFlash;
-extern uint8_t numOfRecordedSnippets;
-
 /* Local functions */
 static Module_Status PollingSleepCLISafe(uint32_t period, long Numofsamples);
 
 /* Module exported parameters ------------------------------------------------*/
 module_param_t modParam[NUM_MODULE_PARAMS] ={{.paramPtr = NULL, .paramFormat =FMT_FLOAT, .paramName =""}};
-
+extern FLASH_ProcessTypeDef pFlash;
+extern uint8_t numOfRecordedSnippets;
 /* Private variables ---------------------------------------------------------*/
 TimerHandle_t xTimerSwitch = NULL;
 SwitchState_t SwitchState = STATE_OFF, SwitchOldState = STATE_ON; // Initial state value to solid switch
@@ -76,34 +73,6 @@ const CLI_Command_Definition_t ToggleCommandDefinition = {
 		ToggleCommand, /* The function to run. */
 		0 /* No parameters are expected. */
 };
-
-/*-----------------------------------------------------------*/
-
-/* CLI command structure : sample */
-
-/* CLI command structure : stop */
-
-
-/* CLI command structure : unit */
-
-
-/* CLI command structure : rate */
-
-
-
-/* CLI command structure : calibration */
-
-
-/* CLI command structure : zerocal */
-
-
-/*-----------------------------------------------------------*/
-/* CLI command structure : weight */
-
-
-/*-----------------------------------------------------------*/
-/* CLI command structure : weight */
-
 
 /* ---------------------------------------------------------------------
  |							 Private Functions	                	   |
@@ -454,11 +423,6 @@ uint8_t GetPort(UART_HandleTypeDef *huart){
 	
 	return 0;
 }
-
-/* --- Register this module CLI Commands
- */
-
-
 /*-----------------------------------------------------------*/
 
 
@@ -475,31 +439,6 @@ uint8_t GetPort(UART_HandleTypeDef *huart){
 //
 //}
 
-/*-----------------------------------------------------------*/
-
-/*-----------------------------------------------------------*/
-
-/*-----------------------------------------------------------*/
-
-/*-----------------------------------------------------------*/
-
-/*-----------------------------------------------------------*/
-
-
-/*-----------------------------------------------------------*/
-
-/*-----------------------------------------------------------*/
-
-
-/* -----------------------------------------------------------------------
-
-/*-----------------------------------------------------------*/
-
-/*-----------------------------------------------------------*/
-
-/*-----------------------------------------------------------*/
-
-/*-----------------------------------------------------------*/
 /* --- Switch timer callback ---*/
 void SwitchTimerCallback(TimerHandle_t xTimerSwitch){
 	/* The solid state switched off after elapsed time */
@@ -572,11 +511,6 @@ Module_Status OutputToggle(void) {
 	}
 	return H0FR1_OK;
 }
-/*-----------------------------------------------------------*/
-
-
-/*-----------------------------------------------------------*/
-
 /*-----------------------------------------------------------*/
 
 /* -----------------------------------------------------------------------
